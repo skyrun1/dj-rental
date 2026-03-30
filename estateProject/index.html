@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏠 Available Houses</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #2a9d8f;
+    --orange: #e76f51;
+    --dark: #1a1a2e;
+    --light: #f8f7f4;
+    --shadow: 0 4px 24px rgba(0,0,0,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--light);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--dark);
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    color: white;
+    font-size: 1.4rem;
+  }
+
+  header a {
+    background: var(--orange);
+    color: white;
+    text-decoration: none;
+    padding: 0.55rem 1.2rem;
+    border-radius: 50px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  header a:hover { background: #d65f3e; transform: translateY(-1px); }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--green) 0%, #1a6b61 100%);
+    color: white;
+    text-align: center;
+    padding: 2.5rem 1rem;
+  }
+
+  .hero h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .hero p { font-size: 0.95rem; opacity: 0.85; }
+
+  /* GRID */
+  .listing-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    padding: 40px 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  @media (max-width: 1100px) { .listing-container { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 768px)  { .listing-container { grid-template-columns: repeat(2, 1fr); gap: 14px; padding: 20px 12px; } }
+  @media (max-width: 480px)  { .listing-container { grid-template-columns: 1fr; } }
+
+  /* HOUSE CARD */
+  .house-card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: transform 0.25s, box-shadow 0.25s;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .house-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 14px 36px rgba(0,0,0,0.13);
+  }
+
+  .thumb-wrap {
+    width: 100%;
+    height: 190px;
+    background: #dde8e6;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+  }
+
+  .thumb-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s;
+  }
+
+  .house-card:hover .thumb-wrap img { transform: scale(1.04); }
+
+  .card-body {
+    padding: 14px 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .house-number {
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .house-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    color: var(--dark);
+  }
+
+  .zip-code { font-size: 0.8rem; color: #888; }
+
+  .house-details {
+    display: flex;
+    gap: 12px;
+    font-size: 0.82rem;
+    color: #666;
+    margin: 3px 0;
+  }
+
+  .price {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--orange);
+    margin-top: auto;
+    padding-top: 6px;
+  }
+
+  .applicant-badge {
+    background: #e8f5e9;
+    color: #2e7d32;
+    font-size: 0.75rem;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+    display: inline-block;
+  }
+
+  .view-btn {
+    display: block;
+    background: var(--dark);
+    color: white;
+    text-align: center;
+    padding: 11px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    font-family: 'DM Sans', sans-serif;
+    transition: background 0.2s;
+  }
+
+  .view-btn:hover { background: #2d2d4e; }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: #fff;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 780px;
+    max-height: 92vh;
+    overflow-y: auto;
+    position: relative;
+    animation: slideUp 0.3s ease;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(40px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: var(--dark);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    font-size: 1rem;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-main-img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    border-radius: 20px 20px 0 0;
+    display: block;
+    background: #dde8e6;
+    transition: opacity 0.3s ease;
+  }
+
+  .modal-main-img.fade { opacity: 0; }
+
+  /* ROOM TABS */
+  .room-tabs {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 14px 16px 0;
+    scrollbar-width: none;
+  }
+
+  .room-tabs::-webkit-scrollbar { display: none; }
+
+  .room-tab {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1.5px solid #ddd;
+    background: white;
+    font-size: 0.8rem;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .room-tab:hover { border-color: var(--green); color: var(--green); }
+  .room-tab.active { background: var(--green); color: white; border-color: var(--green); }
+
+  .modal-body { padding: 16px 20px 28px; }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: var(--dark);
+  }
+
+  .modal-price {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--orange);
+  }
+
+  .modal-meta {
+    display: flex;
+    gap: 16px;
+    font-size: 0.88rem;
+    color: #555;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+
+  .modal-zip {
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 16px;
+  }
+
+  .modal-apply {
+    display: block;
+    background: var(--orange);
+    color: white;
+    text-align: center;
+    padding: 14px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background 0.2s;
+    margin-top: 16px;
+  }
+
+  .modal-apply:hover { background: #d65f3e; }
+
+  footer {
+    text-align: center;
+    padding: 2rem;
+    color: #aaa;
+    font-size: 0.82rem;
+    border-top: 1px solid #eee;
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <h1>🏠 House Listings</h1>
+  <a href="form.html">📋 Apply Now</a>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <h2>Find Your Perfect Home</h2>
+  <p>Click any house to view rooms & apply — Haz clic para ver y aplicar</p>
+</div>
+
+<!-- CARDS GRID -->
+<div class="listing-container" id="listingContainer"></div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <img class="modal-main-img" id="modalMainImg" src="" alt="Room view">
+    <div class="room-tabs" id="roomTabs"></div>
+    <div class="modal-body">
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle"></div>
+        <div class="modal-price" id="modalPrice"></div>
+      </div>
+      <div class="modal-meta" id="modalMeta"></div>
+      <div class="modal-zip"  id="modalZip"></div>
+      <a class="modal-apply" id="modalApply" href="#">Apply for this House / Aplicar →</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 House Rentals. All rights reserved.</p>
+</footer>
+
+<script>
+// ============================================================
+// HOUSE DATA
+// Edit price, beds, baths, zip, rooms here anytime
+// ============================================================
+var houses = [
+  { id: 1,  price: 970, beds: 3, baths: 2, zip: "40504", rooms: ["front","living","kitchen","bedroom1","bedroom2","bedroom3","bathroom1","bathroom2",] },
+  { id: 2,  price: 850,  beds: 2, baths: 2, zip: "40504", rooms: ["front","living","kitchen","bedroom1","bedroom2","bathroom1", "bathroom2", "backyard","garage"] },
+  { id: 3,  price: 1050, beds: 4, baths: 1, zip: "40504", rooms: ["front","living","kitchen","bedroom1","bedroom2","bedroom3","bedroom4","bathroom1","backyard"] },
+  { id: 4,  price: 650,  beds: 1, baths: 1, zip: "40504", rooms: ["kitchen","bedroom","bathroom",] },
+  { id: 5,  price: 850, beds: 2, baths: 2, zip: "40504", rooms: ["front","photo","kitchen","bedroom1","bathroom",] },
+  { id: 6,  price: 950, beds: 3, baths: 1, zip: "40504", rooms: ["front","living","kitchen","bedroom1","bedroom2","bedroom3","bathroom","backyard"] },
+  { id: 7,  price: 1450, beds: 4, baths: 3, zip: "40504", rooms: ["photo",]},
+  { id: 8,  price: 1000,  beds: 3, baths: 2, zip: "40505", rooms: ["front","kitchen", "photo", "bedroom1","bedroom2", "bedroom3", "bathroom1", "bathroom2","backyard"] },
+  { id: 9,  price: 750, beds: 2, baths: 1, zip: "40505", rooms: ["front","living","kitchen","bedroom1","bedroom2","bathroom","backyard",] },
+  { id: 10, price: 700, beds: 2, baths: 1, zip: "40505", rooms: ["front", "living","kitchen","photo","bedroom1","bedroom2",] },
+  { id: 11, price: 1000, beds: 3, baths: 2, zip: "40505", rooms: ["front","living","kitchen", "photo", "full","bedroom","bedroom","bedroom","bathroom1","bathroom2","backyard","garage"] },
+  { id: 12, price: 650,  beds: 1, baths: 1, zip: "40504", rooms: ["front","kitchen","bedroom","bathroom","backyard"] },
+  { id: 13, price: 1050, beds: 4, baths: 1, zip: "40505", rooms: ["photo1",] },
+  { id: 14, price: 750, beds: 2, baths: 1, zip: "40505", rooms: ["front","kitchen", "photo","bedroom","bedroom",] },
+  { id: 15, price: 1000, beds: 3, baths: 2.5, zip: "40505", rooms: ["front","living","kitchen","bedroom","bedroom","bedroom","bathroom1","bathroom2", "photo","backyard","garage"] },
+  { id: 16, price: 850, beds: 2, baths: 2, zip: "40502", rooms: ["front","living","kitchen", "photo","bedroom","bathroom", "gym", "garage","backyard"] },
+  { id: 17, price: 1600, beds: 5, baths: 3.5, zip: "40511", rooms: ["front","kitchen","photo","bathroom","bathroom2.5","backyard",] },
+  { id: 18, price: 730,  beds: 2, baths: 1, zip: "40505", rooms: ["front","living", "photo1","kitchen","photo","bedroom","bedroom","bathroom",] },
+  { id: 19, price: 970, beds: 3, baths: 2.5, zip: "40509", rooms: ["front","living","photo","kitchen","bedroom","bedroom","bedroom3","bathroom1.5","bathroom",] },
+  { id: 20, price: 850, beds: 2, baths: 2, zip: "40508", rooms: ["front","living","house","kitchen", "photo","bedroom1","bedroom2","bathroom","backyard"] }
+];
+
+// Room label display names
+var roomLabels = {
+  front:     "🏠 Front",
+  living:    "🛋 Living Room",
+  kitchen:   "🍳 Kitchen",
+  bedroom1:  "🛏 Bedroom 1",
+  bedroom2:  "🛏 Bedroom 2",
+  bedroom3:  "🛏 Bedroom 3",
+  bedroom4:  "🛏 Bedroom 4",
+  bedroom5:  "🛏 Bedroom 5",
+  bathroom1: "🚿 Bathroom 1",
+  bathroom2: "🚿 Bathroom 2",
+  bathroom3: "🚿 Bathroom 3",
+  backyard:  "🌿 Backyard",
+  garage:    "🚗 Garage"
+};
+
+
+
+// ============================================================
+// BUILD CARDS
+// ============================================================
+var container = document.getElementById("listingContainer");
+
+houses.forEach(function(house) {
+  var card = document.createElement("div");
+  card.className = "house-card";
+
+  card.innerHTML =
+    '<div class="thumb-wrap">' +
+      '<img src="images/house' + house.id + '.jpg" alt="House ' + house.id + '" ' +
+        'onerror="this.parentNode.innerHTML=\'🏠\'">' +
+    '</div>' +
+    '<div class="card-body">' +
+      '<span class="house-number">Available</span>' +
+'<div class="house-title">Rental Property</div>' +
+      '<div class="zip-code">📍 ZIP: ' + house.zip + '</div>' +
+      '<div class="house-details">' +
+        '<span>🛏 ' + house.beds + ' bed' + (house.beds > 1 ? 's' : '') + '</span>' +
+        '<span>🚿 ' + house.baths + ' bath' + (house.baths > 1 ? 's' : '') + '</span>' +
+      '</div>' +
+
+      '<div class="price">$' + house.price.toLocaleString() + '/mo</div>' +
+    '</div>' +
+    '<button class="view-btn" onclick="openModal(' + house.id + ')">Request a Tour &rarr;</button>';
+
+  container.appendChild(card);
+});
+
+// ============================================================
+// MODAL
+// ============================================================
+var currentHouseId = null;
+
+function openModal(houseId) {
+  currentHouseId = houseId;
+
+  var house = null;
+  for (var i = 0; i < houses.length; i++) {
+    if (houses[i].id === houseId) { house = houses[i]; break; }
+  }
+
+  document.getElementById("modalTitle").textContent = "Schedule Your Tour";
+  document.getElementById("modalPrice").textContent = "$" + house.price.toLocaleString() + "/mo";
+  document.getElementById("modalMeta").innerHTML =
+    "<span>🛏 " + house.beds + " bed" + (house.beds > 1 ? "s" : "") + "</span>" +
+    "<span>🚿 " + house.baths + " bath" + (house.baths > 1 ? "s" : "") + "</span>";
+  document.getElementById("modalZip").textContent = "📍 ZIP Code: " + house.zip;
+  document.getElementById("modalApply").href = "form.html?house=" + houseId;
+
+  // Build room tabs for this specific house
+  var tabsEl = document.getElementById("roomTabs");
+  tabsEl.innerHTML = "";
+
+  house.rooms.forEach(function(room, i) {
+    var btn = document.createElement("button");
+    btn.className = "room-tab" + (i === 0 ? " active" : "");
+    btn.textContent = roomLabels[room] || room;
+    (function(index, roomKey) {
+      btn.onclick = function() { switchRoom(index, roomKey); };
+    })(i, room);
+    tabsEl.appendChild(btn);
+  });
+
+  // Load first room image
+  setRoomImage(house.rooms[0], houseId);
+
+  document.getElementById("modalOverlay").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function switchRoom(index, roomKey) {
+  var tabs = document.querySelectorAll(".room-tab");
+  for (var i = 0; i < tabs.length; i++) {
+    tabs[i].className = "room-tab" + (i === index ? " active" : "");
+  }
+  var img = document.getElementById("modalMainImg");
+  img.classList.add("fade");
+  var houseId = currentHouseId;
+  setTimeout(function() {
+    setRoomImage(roomKey, houseId);
+    img.classList.remove("fade");
+  }, 280);
+}
+
+function setRoomImage(roomKey, houseId) {
+  var img = document.getElementById("modalMainImg");
+  img.src = "images/house" + houseId + "-" + roomKey + ".jpg";
+  img.onerror = function() {
+    this.onerror = null;
+    this.src = "images/house" + houseId + ".jpg";
+  };
+}
+
+function closeModal() {
+  document.getElementById("modalOverlay").classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+document.getElementById("modalClose").onclick = closeModal;
+document.getElementById("modalOverlay").onclick = function(e) {
+  if (e.target === this) closeModal();
+};
+document.addEventListener("keydown", function(e) {
+  if (e.key === "Escape") closeModal();
+});
+</script>
+</body>
+</html>

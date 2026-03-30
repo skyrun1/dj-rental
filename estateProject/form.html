@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>House Rent Application Form</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+</head>
+
+<body>
+
+<header>
+<h1>HOUSE 🏠 RENT APPLICATION FORM 🏡</h1>
+</header>
+
+<div class="container">
+<form id="rentForm">
+  
+
+<div class="form-group">
+<label>1. APPLICANT FULL NAME / NOMBRE COMPLETO DEL SOLICITANTE</label>
+<input type="text" id="fullName" required>
+</div>
+
+<div class="form-group">
+<label>2. TENANT MAIL ADDRESS / DIRECCIÓN DE CORREO DEL INQUILINO</label>
+<input type="email" id="email" required>
+</div>
+
+<div class="form-group">
+<label>3. WHAT TYPE OF CAR DO YOU DRIVE / ¿QUÉ TIPO DE COCHE CONDUCES?</label>
+<input type="text" id="carType">
+</div>
+
+<div class="form-group">
+<label>4. APPLICANT CURRENT HOUSE ADDRESS / DIRECCIÓN ACTUAL</label>
+<input type="text" id="currentAddress">
+</div>
+
+<div class="form-group">
+<label>5. APPLICANT PHONE NUMBER / NÚMERO DE TELÉFONO</label>
+<input type="text" id="phone">
+</div>
+
+<div class="form-group">
+<label>6. APPLICANT OCCUPATION / OCUPACIÓN</label>
+<input type="text" id="occupation">
+</div>
+
+<div class="form-group">
+<label>7. DO YOU HAVE ANY PET? / ¿TIENES ALGUNA MASCOTA?</label>
+<label><input type="radio" name="pets" value="Yes"> Yes / Sí</label>
+<label><input type="radio" name="pets" value="No"> No</label>
+</div>
+
+<div class="form-group">
+<label>8. APPLICATION FEE / TARIFA DE SOLICITUD ($50)</label>
+<select id="paymentMethod">
+<option>Cashapp</option>
+<option>Zelle</option>
+<option>Apple Pay</option>
+<option>Paypal</option>
+<option>Chime</option>
+<option>Venmo</option>
+<option>Card code</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>9. ARE YOU MARRIED / ¿ESTÁS CASADO?</label>
+<label><input type="radio" name="married" value="Yes"> Yes / Sí</label>
+<label><input type="radio" name="married" value="No"> No</label>
+</div>
+
+<div class="form-group">
+<label>10. HAS APPLICANT EVER BROKEN A LEASE / ¿HAS ROTO UN CONTRATO?</label>
+<label><input type="radio" name="brokenLease" value="Yes"> Yes / Sí</label>
+<label><input type="radio" name="brokenLease" value="No"> No</label>
+</div>
+
+<div class="form-group">
+<label>11. HAS APPLICANT EVER BEEN GUILTY OF FELONY / ¿DELITO GRAVE?</label>
+<label><input type="radio" name="felony" value="Yes"> Yes / Sí</label>
+<label><input type="radio" name="felony" value="No"> No</label>
+</div>
+
+<div class="form-group">
+<label>12. HOW MANY APPLICANTS MOVING IN / ¿CUÁNTOS SE MUDAN?</label>
+<input type="number" id="numMoving">
+</div>
+
+<div class="form-group">
+<label>13. LOCKED OUT BY SHERIFF / ¿DESALOJO?</label>
+<label><input type="radio" name="lockout" value="Yes"> Yes / Sí</label>
+<label><input type="radio" name="lockout" value="No"> No</label>
+</div>
+
+<div class="form-group">
+<label>14. OTHER APPLICANT NAME / OTRO SOLICITANTE</label>
+<input type="text" id="otherApplicant">
+</div>
+
+<div class="form-group">
+<label>15. DO YOU DRINK / ¿BEBES?</label>
+<label><input type="radio" name="alcohol" value="Yes"> Yes / Sí</label>
+<label><input type="radio" name="alcohol" value="No"> No</label>
+</div>
+
+<div class="form-group">
+<label>16. DO YOU SMOKE / ¿FUMAS?</label>
+<label><input type="radio" name="smoke" value="Yes"> Yes / Sí</label>
+<label><input type="radio" name="smoke" value="No"> No</label>
+</div>
+
+<div class="form-group">
+<label>17. MOVE-IN DATE / FECHA DE MUDANZA</label>
+<input type="date" id="moveDate">
+</div>
+
+<div class="form-group">
+<label>18. SUED BEFORE / ¿HAS DEMANDADO?</label>
+<label><input type="radio" name="suing" value="Yes"> Yes / Sí</label>
+<label><input type="radio" name="suing" value="No"> No</label>
+</div>
+
+<div class="form-group">
+<label>19. PREVIOUS LANDLORD / PROPIETARIO ANTERIOR</label>
+<input type="text" id="prevLandlord">
+</div>
+
+<div class="form-group">
+<label>20. TENANCY LENGTH / DURACIÓN</label>
+<input type="text" id="tenancyLength">
+</div>
+
+<div class="form-group">
+<label>21. MONTHLY INCOME / INGRESOS</label>
+<input type="number" id="income">
+</div>
+
+<div class="form-group">
+<label>22. OTHER INCOME / OTROS INGRESOS</label>
+<input type="text" id="otherIncome">
+</div>
+
+<div class="form-group">
+<label>23. AGREE TO TERMS / ACEPTAR TÉRMINOS</label>
+<input type="checkbox" id="agree" required>
+</div>
+
+<div class="form-group">
+<label>24. ID CARD FRONT & BACK / TARJETA DE IDENTIFICACIÓN O PASAPORTE</label>
+<input type="file" id="idfileUpload" accept="image/*'.pdf">
+</div>
+<div class="form-group" style="background:#f8f7f4; padding:16px; border-radius:8px; border-left:4px solid #2a9d8f;">
+  <p style="font-size:0.85rem; color:#555; line-height:1.6;">
+    🔒 <strong>Your information is secure.</strong> All data submitted through this form is encrypted and used solely for rental application purposes by DJ Rentals. We do not sell or share your personal information with third parties.
+    <br><br>
+    By submitting this application you agree to our 
+    <a href="terms.html" target="_blank" style="color:#2a9d8f;">Terms & Conditions</a> and 
+    <a href="privacy.html" target="_blank" style="color:#2a9d8f;">Privacy Policy</a>.
+  </p>
+</div>
+<button type="submit">Submit / Enviar</button>
+
+</form>
+</div>
+
+<footer style="background:#1a1a2e; color:#aaa; padding:2rem 1.5rem; margin-top:20px;">
+  <div style="max-width:800px; margin:0 auto; display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
+    <div>
+      <h4 style="font-family:Georgia,serif; color:#2a9d8f; margin-bottom:10px;">🏠 DJ Rentals</h4>
+      <p style="font-size:0.85rem; line-height:1.6;">Quality homes for quality tenants in Lexington, Kentucky.</p>
+    </div>
+    <div>
+      <h4 style="font-family:Georgia,serif; color:#2a9d8f; margin-bottom:10px;">Quick Links</h4>
+      <a href="form.html" style="display:block; color:#aaa; text-decoration:none; font-size:0.85rem; margin-bottom:4px;">📋 Apply Now</a>
+      <a href="index.html" style="display:block; color:#aaa; text-decoration:none; font-size:0.85rem; margin-bottom:4px;"> 🏠 View Houses</a>
+      <a href="terms.html" style="display:block; color:#aaa; text-decoration:none; font-size:0.85rem; margin-bottom:4px;">📄 Terms & Conditions</a>
+      <a href="privacy.html" style="display:block; color:#aaa; text-decoration:none; font-size:0.85rem;">🔒 Privacy Policy</a>
+    </div>
+    <div>
+      <h4 style="font-family:Georgia,serif; color:#2a9d8f; margin-bottom:10px;">Contact Us</h4>
+      <p style="font-size:0.85rem; margin-bottom:4px;">📍 Lexington, Kentucky</p>
+      <p style="font-size:0.85rem; margin-bottom:4px;">📞 +1 (859) 440-6644</p>
+      <p style="font-size:0.85rem; margin-bottom:4px;">📧 dj896203@gmail.com</p>
+      <p style="font-size:0.85rem;">👤 David John — Property Manager</p>
+    </div>
+  </div>
+  <div style="text-align:center; margin-top:24px; padding-top:16px; border-top:1px solid #333; font-size:0.8rem; color:#666;">
+    <p>© 2026 DJ Rentals. All rights reserved. | Lexington, Kentucky USA</p>
+  </div>
+</footer>
+ 
+<script src="js/script.js"></script>
+</body>
+</html>
